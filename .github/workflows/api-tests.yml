@@ -1,0 +1,54 @@
+name: API tests (Proxius)
+
+# Runs the example Proxius collection on every push / PR, and on demand.
+# Copy this file into your own repo to gate merges on your API contract.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      # Build the headless runner from this repo. In your own project instead do:
+      #   cargo install --git https://github.com/<owner>/proxius proxius-cli
+      # (installs a `proxius` binary onto PATH), then drop this step.
+      - name: Build proxius CLI
+        run: cargo build --release -p proxius-cli
+
+      - name: Run API collection
+        uses: ./.github/actions/proxius-run
+        with:
+          collection: examples/httpbin.pxs
+          report-dir: proxius-report
+          proxius-bin: ./target/release/proxius
+          # env: environments/ci.json
+          # vars: "token=${{ secrets.API_TOKEN }}"
+          # data: examples/dataset.json
+          # notify: ${{ secrets.SLACK_WEBHOOK }}
+          # notify-on: failure
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: proxius-report
+          path: proxius-report/
+
+      - name: Publish test results
+        if: always()
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: proxius-report/junit.xml
+          fail_on_failure: true

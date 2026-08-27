@@ -13,7 +13,7 @@ members = [
 # Crate berikut menyusul sesuai milestone: agent, collab, script.
 
 [workspace.package]
-version = "0.0.0"
+version = "0.0.1"
 edition = "2021"
 license = "AGPL-3.0-only"
 authors = ["Proxius"]

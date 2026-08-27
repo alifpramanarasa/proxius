@@ -3310,7 +3310,7 @@ dependencies = [
 
 [[package]]
 name = "proxius-cli"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "axum",
@@ -3326,7 +3326,7 @@ dependencies = [
 
 [[package]]
 name = "proxius-core"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "serde",
  "serde_json",
@@ -3336,7 +3336,7 @@ dependencies = [
 
 [[package]]
 name = "proxius-db"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "chrono",
@@ -3348,7 +3348,7 @@ dependencies = [
 
 [[package]]
 name = "proxius-desktop"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "axum",
@@ -3371,7 +3371,7 @@ dependencies = [
 
 [[package]]
 name = "proxius-engine"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3384,7 +3384,7 @@ dependencies = [
 
 [[package]]
 name = "proxius-grpc"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "bytes",
@@ -3402,7 +3402,7 @@ dependencies = [
 
 [[package]]
 name = "proxius-runner"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "proxius-core",
@@ -3416,7 +3416,7 @@ dependencies = [
 
 [[package]]
 name = "proxius-server"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "argon2",
