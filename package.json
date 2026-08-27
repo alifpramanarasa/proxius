@@ -1,0 +1,20 @@
+{
+  "name": "proxius",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Alternatif Postman self-hosted & gratis",
+  "scripts": {
+    "dev": "pnpm --filter @proxius/app dev",
+    "desktop": "pnpm --filter @proxius/desktop dev",
+    "admin": "pnpm --filter @proxius/admin dev",
+    "server": "cargo run -p proxius-server",
+    "build:app": "pnpm --filter @proxius/app build",
+    "build:desktop": "pnpm --filter @proxius/desktop build",
+    "build:admin": "pnpm --filter @proxius/admin build",
+    "compose": "docker compose up -d",
+    "icon": "pnpm --filter @proxius/desktop icon"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,27 @@
+[package]
+name = "proxius-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "proxius-server"
+path = "src/main.rs"
+
+[dependencies]
+proxius-db = { path = "../db" }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+uuid = { workspace = true }
+chrono = { version = "0.4", features = ["serde"] }
+axum = { version = "0.7", features = ["ws"] }
+tower = "0.5"
+futures = { workspace = true }
+tower-http = { version = "0.6", features = ["cors", "fs", "trace"] }
+argon2 = "0.5"
+rand = "0.8"
+async-trait = { workspace = true }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

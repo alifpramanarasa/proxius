@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Skala neutral sebagai variabel (RGB triplet agar utilitas opacity jalan).
+   Default = tema gelap (nilai neutral Tailwind asli). */
+:root {
+  color-scheme: dark;
+  --n-50: 250 250 250;
+  --n-100: 245 245 245;
+  --n-200: 229 229 229;
+  --n-300: 212 212 212;
+  --n-400: 163 163 163;
+  --n-500: 115 115 115;
+  --n-600: 82 82 82;
+  --n-700: 64 64 64;
+  --n-800: 38 38 38;
+  --n-900: 23 23 23;
+  --n-950: 10 10 10;
+  --scroll-thumb: #3f3f46;
+  --scroll-thumb-hover: #52525b;
+}
+
+/* Tema terang: ramp dibalik (index i ↔ 1000−i) — kode konsisten memakai
+   angka tinggi utk latar & angka rendah utk teks, jadi inversi menghasilkan
+   tema terang yang koheren tanpa menyentuh className. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --n-50: 10 10 10;
+  --n-100: 23 23 23;
+  --n-200: 38 38 38;
+  --n-300: 64 64 64;
+  --n-400: 82 82 82;
+  --n-500: 115 115 115;
+  --n-600: 163 163 163;
+  --n-700: 212 212 212;
+  --n-800: 229 229 229;
+  --n-900: 245 245 245;
+  --n-950: 250 250 250;
+  --scroll-thumb: #cbcbd1;
+  --scroll-thumb-hover: #a1a1aa;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-neutral-950 text-neutral-100 antialiased;
+}
+
+/* Keyboard focus — visible ring for accessibility & keyboard nav.
+   Kept after @tailwind utilities so it wins over inline `outline-none`. */
+:focus-visible {
+  outline: 2px solid theme("colors.brand.fg");
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+/* Pointer clicks shouldn't paint the ring, only real keyboard focus. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Subtle, theme-matched scrollbars. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
+  background-clip: content-box;
+}
+
+::selection {
+  background: color-mix(in srgb, theme("colors.brand.fg") 32%, transparent);
+}
+
+/* Keyboard-shortcut hint pills (e.g. in tooltips / empty states). */
+kbd {
+  @apply inline-flex items-center rounded border border-neutral-700 bg-neutral-800 px-1 font-mono text-[10px] leading-4 text-neutral-300;
+}
+
+/* Method badge colors */
+.method-GET {
+  @apply text-emerald-400;
+}
+.method-POST {
+  @apply text-amber-400;
+}
+.method-PUT {
+  @apply text-sky-400;
+}
+.method-PATCH {
+  @apply text-violet-400;
+}
+.method-DELETE {
+  @apply text-rose-400;
+}
+.method-HEAD,
+.method-OPTIONS {
+  @apply text-neutral-400;
+}

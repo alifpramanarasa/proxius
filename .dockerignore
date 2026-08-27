@@ -1,0 +1,7 @@
+target/
+**/node_modules/
+**/dist/
+bindings/
+.git/
+apps/desktop/src-tauri/gen/
+*.log

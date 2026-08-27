@@ -1,0 +1,77 @@
+name: "Proxius API Tests"
+description: "Run a Proxius (.pxs) collection headlessly and produce JUnit + HTML reports for CI."
+branding:
+  icon: "check-circle"
+  color: "purple"
+
+inputs:
+  collection:
+    description: "Path to the exported .pxs / RunDocument JSON to run."
+    required: true
+  env:
+    description: 'Optional path to an environment JSON file ({"key":"value"}).'
+    required: false
+    default: ""
+  data:
+    description: "Optional path to a data-driven JSON array (one object of vars per iteration)."
+    required: false
+    default: ""
+  vars:
+    description: "Optional space-separated K=V variable overrides, e.g. token=abc host=api.dev."
+    required: false
+    default: ""
+  report-dir:
+    description: "Directory to write junit.xml, report.html and report.json."
+    required: false
+    default: "proxius-report"
+  notify:
+    description: "Optional webhook URL to post the result summary to (Slack/Discord/Teams/generic)."
+    required: false
+    default: ""
+  notify-on:
+    description: "When to notify: 'failure' (default) or 'always'."
+    required: false
+    default: "failure"
+  proxius-bin:
+    description: "Path to the proxius binary. Defaults to `proxius` on PATH (install it in a prior step)."
+    required: false
+    default: "proxius"
+
+outputs:
+  report-dir:
+    description: "Directory containing the generated reports."
+    value: ${{ inputs.report-dir }}
+  html:
+    description: "Path to the generated HTML report."
+    value: ${{ steps.run.outputs.html }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: run
+      shell: bash
+      run: |
+        set -uo pipefail
+        args=(run "${{ inputs.collection }}")
+        [ -n "${{ inputs.env }}" ]  && args+=(--env  "${{ inputs.env }}")
+        [ -n "${{ inputs.data }}" ] && args+=(--data "${{ inputs.data }}")
+        for kv in ${{ inputs.vars }}; do args+=(--var "$kv"); done
+        [ -n "${{ inputs.notify }}" ] && args+=(--notify "${{ inputs.notify }}" --notify-on "${{ inputs.notify-on }}")
+
+        # One run emits pretty logs (stdout) + all report files; exit code = pass/fail.
+        "${{ inputs.proxius-bin }}" "${args[@]}" \
+          --report junit --report html --report json \
+          --report-dir "${{ inputs.report-dir }}"
+        code=$?
+
+        echo "html=${{ inputs.report-dir }}/report.html" >> "$GITHUB_OUTPUT"
+        # Job summary (rendered on the run's page).
+        if [ -f "${{ inputs.report-dir }}/junit.xml" ]; then
+          {
+            echo "### Proxius API tests"
+            if [ "$code" -eq 0 ]; then echo "✅ **PASS**"; else echo "❌ **FAIL**"; fi
+            echo ""
+            echo "See the uploaded \`report.html\` artifact for the full report."
+          } >> "$GITHUB_STEP_SUMMARY"
+        fi
+        exit $code

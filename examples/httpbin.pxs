@@ -1,0 +1,54 @@
+{
+  "name": "httpbin smoke tests",
+  "variables": [
+    { "key": "baseUrl", "value": "https://httpbin.org", "enabled": true }
+  ],
+  "requests": [
+    {
+      "id": "req-get",
+      "name": "GET /get returns JSON",
+      "method": "GET",
+      "url": "{{baseUrl}}/get",
+      "headers": [{ "key": "Accept", "value": "application/json", "enabled": true }],
+      "query": [{ "key": "hello", "value": "world", "enabled": true }],
+      "body": { "kind": "none" },
+      "assertions": [
+        { "id": "a1", "source": { "kind": "status" }, "op": "equals", "value": "200", "enabled": true },
+        { "id": "a2", "source": { "kind": "header", "name": "content-type" }, "op": "contains", "value": "application/json", "enabled": true },
+        { "id": "a3", "source": { "kind": "responseTime" }, "op": "lessThan", "value": "10000", "enabled": true },
+        { "id": "a4", "source": { "kind": "jsonPath", "path": "$.args.hello" }, "op": "equals", "value": "world", "enabled": true },
+        {
+          "id": "a5",
+          "source": { "kind": "body" },
+          "op": "matchesSchema",
+          "value": "{\"type\":\"object\",\"required\":[\"url\",\"headers\",\"args\",\"origin\"],\"properties\":{\"url\":{\"type\":\"string\",\"format\":\"uri\"},\"origin\":{\"type\":\"string\"}}}",
+          "enabled": true
+        }
+      ],
+      "extracts": [],
+      "tests": []
+    },
+    {
+      "id": "req-post",
+      "name": "POST /post echoes body",
+      "method": "POST",
+      "url": "{{baseUrl}}/post",
+      "headers": [{ "key": "Content-Type", "value": "application/json", "enabled": true }],
+      "query": [],
+      "body": { "kind": "json", "content": "{\"name\":\"proxius\",\"ci\":true}" },
+      "assertions": [
+        { "id": "b1", "source": { "kind": "status" }, "op": "equals", "value": "200", "enabled": true },
+        { "id": "b2", "source": { "kind": "jsonPath", "path": "$.json.name" }, "op": "equals", "value": "proxius", "enabled": true },
+        {
+          "id": "b3",
+          "source": { "kind": "jsonPath", "path": "$.json" },
+          "op": "matchesSchema",
+          "value": "{\"type\":\"object\",\"required\":[\"name\",\"ci\"],\"properties\":{\"name\":{\"type\":\"string\"},\"ci\":{\"type\":\"boolean\"}}}",
+          "enabled": true
+        }
+      ],
+      "extracts": [],
+      "tests": []
+    }
+  ]
+}
